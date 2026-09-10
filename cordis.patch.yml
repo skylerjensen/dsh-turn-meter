@@ -1,0 +1,26 @@
+# dsh-turn-meter bundle patch: inserts this plugin into a profile's layer stack.
+#
+# The `id` is package-specific (`turn-meter`); a generic id such as `stats`
+# would collide with other usage plugins in the same profile.
+#
+# NOTE: no pricing here on purpose. Default rates live in exactly one place —
+# `lib/pricing.js` (DEFAULT_PRICING). Duplicating them here would create a
+# second source of truth that silently drifts.
+#
+# To override rates, edit the profile's own cordis.patch.yml and list only what
+# differs; everything else keeps the built-in default:
+#
+#   - id: turn-meter
+#     config:
+#       pricing:
+#         models:
+#           deepseek-flash:
+#             peak: { hit: 0.04, miss: 2, out: 8 }
+#
+# Units: CNY per 1M tokens. hit = cache read, miss = cache-miss input, out = output.
+- insert:
+    - id: turn-meter
+      name: 'dsh-turn-meter'
+      config:
+        # 排障用：置 true 后每轮回复尾部显示数据源诊断串 [tm C=x S=x chat=x sess=x]
+        debug: false
